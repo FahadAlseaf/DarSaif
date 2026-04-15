@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import LanguageToggle from "./LanguageToggle";
 
 export default function Footer() {
   const t = useTranslations("nav");
@@ -40,9 +41,12 @@ export default function Footer() {
         </nav>
       </div>
 
-      <p className="mt-8 text-xs text-text-secondary font-body">
-        © {year} DarSaif. {tf("rights")}
-      </p>
+      <div className="mt-8 flex items-center justify-between">
+        <p className="text-xs text-text-secondary font-body">
+          © {year} DarSaif. {tf("rights")}
+        </p>
+        <LanguageToggle />
+      </div>
     </footer>
   );
 }

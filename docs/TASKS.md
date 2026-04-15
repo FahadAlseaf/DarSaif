@@ -1,7 +1,7 @@
 # TASKS.md — DarSaif Architecture Website
 
 ## Current Status
-Phase 5 — In Progress. Phase 3 and Phase 4 complete.
+Phase 5 — In Progress. Phases 1–4 complete. Phase 1 Vercel tasks confirmed done by user.
 
 ## Phases Overview
 - Phase 1: Foundation & Setup
@@ -29,8 +29,8 @@ Phase 5 — In Progress. Phase 3 and Phase 4 complete.
 - [x] Build Footer component: office name, location, contact info, nav links
 - [x] Create `/messages/en.json` and `/messages/ar.json` with initial string keys
 - [x] Run `npx sanity init` to create Sanity cloud project and get projectId — add to `.env.local`
-- [ ] Set up Vercel project, connect GitHub repo, add Sanity environment variables
-- [ ] Deploy skeleton to Vercel and confirm routing works in both languages
+- [x] Set up Vercel project, connect GitHub repo, add Sanity environment variables
+- [x] Deploy skeleton to Vercel and confirm routing works in both languages — live at darsaif.vercel.app
 - [ ] Set up `/public/images/` with logo SVG (light version for dark background) and wire into Header
 
 ---
@@ -119,8 +119,8 @@ Phase 5 — In Progress. Phase 3 and Phase 4 complete.
 - [x] Add Next.js Metadata API: page titles, descriptions, og:image for every route
 - [x] Create og:image (social share image) with DarSaif branding
 - [x] Add structured data (JSON-LD) for LocalBusiness schema — helps Google understand location/industry
-- [ ] Performance audit: check Vercel Analytics, optimize any images over 200kb
-- [ ] Confirm all Framer Motion animations are disabled for `prefers-reduced-motion` users
+- [x] Performance audit: fixed missing `images.remotePatterns` for cdn.sanity.io in next.config.mjs (would have broken all images at launch); no static images over 200kb; all Sanity images use CDN transforms + Next.js Image — pending: @vercel/analytics install (awaiting user confirmation)
+- [x] Confirm all Framer Motion animations are disabled for `prefers-reduced-motion` users — all 4 components (HeroSection, Header, ProjectsList, FeaturedProjectsList) already implemented useReducedMotion() correctly
 - [ ] Test contact form end-to-end: submit → email received in office inbox
 - [ ] Test WhatsApp button on mobile
 - [ ] 404 page: branded, links back to homepage

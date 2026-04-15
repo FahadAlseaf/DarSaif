@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import LanguageToggle from "./LanguageToggle";
 
 const NAV_LINKS = [
   ["projects", "/projects"],
@@ -58,9 +57,8 @@ export default function Header() {
         ))}
       </nav>
 
-      {/* Right controls: language toggle + hamburger */}
-      <div className="flex items-center gap-4">
-        <LanguageToggle />
+      {/* Right controls: hamburger */}
+      <div className="flex items-center">
         <button
           onClick={() => setIsOpen((v) => !v)}
           aria-label={isOpen ? t("close") : t("menu")}
