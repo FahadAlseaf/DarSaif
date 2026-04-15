@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "projects": "Projects",
+    "services": "Services",
+    "about": "About",
+    "team": "Team",
+    "careers": "Careers",
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "home": {
+    "heroTagline": "Architecture Office",
+    "viewAllProjects": "View All Projects",
+    "featuredProjects": "Featured Projects",
+    "contactCta": "Start a Project",
+    "contactSubline": "Tell us about your vision and we'll get in touch."
+  },
+  "projects": {
+    "title": "Projects",
+    "all": "All",
+    "residential": "Residential",
+    "commercial": "Commercial",
+    "urban": "Urban",
+    "planning": "Planning",
+    "interior": "Interior",
+    "empty": "Projects coming soon.",
+    "viewProject": "View Project"
+  },
+  "project": {
+    "type": "Type",
+    "location": "Location",
+    "year": "Year",
+    "backToProjects": "Back to Projects",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "services": {
+    "title": "Services",
+    "viewAll": "View All Services",
+    "empty": "Services coming soon."
+  },
+  "about": {
+    "title": "About",
+    "founded": "Founded",
+    "foundedYear": "2024",
+    "location": "Buraydah, Qassim",
+    "locationLabel": "Location",
+    "tagline": "Architecture rooted in place.",
+    "storyHeading": "The Office",
+    "story": "DarSaif is an architecture office based in Buraydah, Qassim, Saudi Arabia. We work across residential, commercial, urban, and planning projects — bringing rigour and intent to every brief, regardless of scale.\n\nOur work is grounded in the specific: the site, the client, the climate, the culture. We do not impose a signature style. We ask the right questions, then build the answer.\n\nThe office was founded with a clear conviction — that quality architecture is not a luxury reserved for large cities or large budgets. Qassim deserves better buildings, and we intend to build them.",
+    "missionLabel": "What We Believe",
+    "mission": "Every project is an opportunity to make something that outlasts the brief. We hold ourselves to that standard on every commission."
+  },
+  "team": {
+    "title": "Team",
+    "empty": "Team profiles coming soon."
+  },
+  "careers": {
+    "title": "Careers",
+    "heading": "We're Growing",
+    "body": "We're always looking for talented people who are passionate about architecture. If you'd like to join the team, get in touch.",
+    "cta": "Send Your Application"
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "projectType": "Project Type",
+    "selectType": "Select a project type",
+    "otherType": "Other",
+    "message": "Message",
+    "send": "Send Message",
+    "submitting": "Sending\u2026",
+    "success": "Message sent. We'll be in touch.",
+    "error": "Something went wrong. Please try again.",
+    "required": "Required",
+    "invalidEmail": "Invalid email address",
+    "whatsapp": "Chat on WhatsApp",
+    "officeLabel": "Office",
+    "address": "Buraydah, Qassim, Saudi Arabia"
+  },
+  "footer": {
+    "location": "Buraydah, Qassim, Saudi Arabia",
+    "rights": "All rights reserved."
+  },
+  "meta": {
+    "siteDescription": "Architecture office based in Buraydah, Qassim, Saudi Arabia.",
+    "homeDescription": "DarSaif is an architecture office based in Buraydah, Qassim. We work across residential, commercial, urban, and planning projects.",
+    "projectsDescription": "Browse the DarSaif project portfolio — residential, commercial, urban, and planning work in Qassim and beyond.",
+    "servicesDescription": "Architectural services spanning residential design, commercial projects, urban development, and planning — DarSaif Architecture.",
+    "aboutDescription": "Learn about DarSaif Architecture, our philosophy, and our work in Qassim, Saudi Arabia.",
+    "teamDescription": "Meet the team behind DarSaif Architecture.",
+    "careersDescription": "Join DarSaif Architecture. We are looking for talented architects and designers in Qassim, Saudi Arabia.",
+    "contactDescription": "Get in touch with DarSaif Architecture to discuss your project. We work across Qassim and Saudi Arabia."
+  }
+}

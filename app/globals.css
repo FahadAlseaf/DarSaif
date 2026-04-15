@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-border: #222222;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #888888;
+  --color-accent: #c8a96e;
+
+  --font-heading: "Cormorant Garamond";
+  --font-body: "Inter";
+  --font-arabic: "Noto Kufi Arabic";
+}
+
+body {
+  color: var(--color-text-primary);
+  background: var(--color-bg);
+  font-family: var(--font-body), sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ─── Arabic / RTL typography ─────────────────────────────────────────── */
+
+/* Activate Noto Kufi Arabic for all body text in Arabic locale */
+html[lang="ar"] body {
+  font-family: var(--font-arabic), sans-serif;
+}
+
+/* Cormorant Garamond has no Arabic glyphs — headings also use arabic font */
+html[lang="ar"] .font-heading {
+  font-family: var(--font-arabic), sans-serif;
+}
+
+/* Arabic script does not use letter-spacing — it breaks letter connections */
+html[lang="ar"] * {
+  letter-spacing: 0 !important;
+}
