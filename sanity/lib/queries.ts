@@ -60,15 +60,21 @@ const projectDetailFields = groq`
   gallery
 `;
 
+const fetchOptions = { cache: "no-store" } as const;
+
 export async function getAllProjects(): Promise<SanityProject[]> {
   return client.fetch(
-    groq`*[_type == "project"] | order(year desc) { ${projectFields} }`
+    groq`*[_type == "project"] | order(year desc) { ${projectFields} }`,
+    {},
+    fetchOptions
   );
 }
 
 export async function getFeaturedProjects(): Promise<SanityProject[]> {
   return client.fetch(
-    groq`*[_type == "project" && featured == true] | order(year desc) { ${projectFields} }`
+    groq`*[_type == "project" && featured == true] | order(year desc) { ${projectFields} }`,
+    {},
+    fetchOptions
   );
 }
 
@@ -77,7 +83,8 @@ export async function getProjectBySlug(
 ): Promise<SanityProject | null> {
   return client.fetch(
     groq`*[_type == "project" && slug.current == $slug][0] { ${projectDetailFields} }`,
-    { slug }
+    { slug },
+    fetchOptions
   );
 }
 
@@ -93,13 +100,21 @@ export async function getAdjacentProjects(
 }
 
 export async function getAllTeamMembers(): Promise<SanityTeamMember[]> {
-  return client.fetch(groq`*[_type == "teamMember"] {
-    _id, name, nameAr, role, roleAr, bio, bioAr, photo
-  }`);
+  return client.fetch(
+    groq`*[_type == "teamMember"] {
+      _id, name, nameAr, role, roleAr, bio, bioAr, photo
+    }`,
+    {},
+    fetchOptions
+  );
 }
 
 export async function getAllServices(): Promise<SanityService[]> {
-  return client.fetch(groq`*[_type == "service"] {
-    _id, title, titleAr, description, descriptionAr, icon
-  }`);
+  return client.fetch(
+    groq`*[_type == "service"] {
+      _id, title, titleAr, description, descriptionAr, icon
+    }`,
+    {},
+    fetchOptions
+  );
 }
