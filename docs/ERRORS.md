@@ -124,6 +124,40 @@
 **Fix/Outcome:** Task accepted as complete. No static PNG needed. The `opengraph-image.tsx` file at the locale segment level serves as the default og:image for all non-project pages. Edge runtime. 1200×630.
 **Rejected:** Creating a static PNG manually (requires external design tool, cannot be updated via code, weaker than dynamic generation).
 
+### 2026-04-17 — Logo PNG had solid black background, not transparent
+**Problem/Decision:** LogoF.png had a solid black background. On the dark site it blended in, but over the hero slideshow images it rendered as a visible black rectangle.
+**Cause/Reason:** The source file was a PNG with filled black background, not a transparent export.
+**Fix/Outcome:** Used PowerShell GDI+ to pixel-scan and replace near-black pixels with transparent. Saved to `public/images/logo.png`. `mix-blend-mode: screen` workaround removed entirely.
+**Rejected:** `mix-blend-mode: screen` (works only on pure black surfaces, breaks over photos).
+
+### 2026-04-17 — Hero slideshow not cycling images
+**Problem/Decision:** Slideshow interval fired but images never changed.
+**Cause/Reason:** `HeroSection` used `getFeaturedProjects()` — only 1 project was marked `featured: true` in Sanity, so `projects.length <= 1` prevented the interval from starting.
+**Fix/Outcome:** Switched to `getAllProjects()` so all projects cycle regardless of featured flag.
+**Rejected:** Keeping `getFeaturedProjects()` (too dependent on content editor remembering to flag projects).
+
+### 2026-04-17 — Stale .next cache caused module-not-found crash on locale switch
+**Problem/Decision:** After a rebuild, switching EN↔AR threw `Cannot find module './vendor-chunks/@sanity+next-loader...'`.
+**Cause/Reason:** Dev server was running with old chunk references; a new build invalidated them without restarting the server.
+**Fix/Outcome:** `rm -rf .next` then restart dev server. No code change needed.
+**Rejected:** N/A — pure cache issue.
+
+### 2026-04-17 — Logo_y.jpg is JPEG, cannot have native transparency
+**Problem/Decision:** Logo_y.jpg (Arabic calligraphy + "Dar Saif Architect") needed to be used as white-on-transparent for the hero.
+**Cause/Reason:** JPEG format has no alpha channel; file had black text on white background.
+**Fix/Outcome:** Used PowerShell GDI+ to: crop to content bounds, strip near-white pixels to transparent, invert near-black to white with smooth alpha derived from pixel brightness. Saved as `public/images/logo-full.png`. Quality acceptable for hero use at web resolution; fine detail on calligraphy strokes has slight JPEG compression fringing.
+**Rejected:** Requesting SVG/PNG export from original source (not available this session); using the full Logo_y as-is (white box would show on dark/photo backgrounds).
+
+### 2026-04-17 — Hero center content redesigned to single logo image
+**Decision:** Replaced separate Arabic calligraphy image + h1 "DarSaif" + tagline with a single `logo-full.png` centered in the hero. Individual `backdrop-filter: blur(4px)` applied only to the logo wrapper, not the full container.
+**Reason:** User confirmed this matches intended design. Single image is cleaner, works identically in EN and AR, avoids stacking mismatches between the separate text elements.
+**Rejected:** Full-container backdrop blur (created one large blurred rectangle, not targeted); per-element blur on 3 separate elements (acceptable but user preferred single logo approach).
+
+### 2026-04-17 — Contact form: env var mismatch + test sender domain
+**Problem/Decision:** `.env.local` had `RESEND_TO_EMAIL` but `sendContactEmail.ts` reads `CONTACT_EMAIL` — recipient fell back to hardcoded `hello@darsaif.com`. Also `from` was `noreply@darsaif.com` (unverified domain, Resend rejects it).
+**Fix/Outcome:** Renamed env var to `CONTACT_EMAIL`. Switched `from` to `onboarding@resend.dev` for testing. End-to-end test passed — email received.
+**Pre-launch action required:** Verify `darsaif.com` as a sender domain in Resend dashboard, then switch `from` back to `noreply@darsaif.com` in `sendContactEmail.ts` and update `CONTACT_EMAIL` to the real office email.
+
 ### 2026-04-15 — JSON-LD LocalBusiness structured data added to locale layout
 **Decision:** Added `<script type="application/ld+json">` directly in the `<body>` of `app/[locale]/layout.tsx`. Schema type is `LocalBusiness` with name, description, URL from `NEXT_PUBLIC_SITE_URL`, PostalAddress (Buraydah / Al Qassim / SA), and areaServed (Saudi Arabia).
 **Reason:** Placing it in the locale layout ensures it renders on every page in both EN and AR. Server component — no client JS needed. `NEXT_PUBLIC_SITE_URL` reuses the same env var already used for `metadataBase`, keeping configuration DRY.

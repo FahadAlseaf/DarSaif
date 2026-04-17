@@ -119,12 +119,19 @@ Phase 5 — In Progress. Phases 1–4 complete. Phase 1 Vercel tasks confirmed d
 - [x] Add Next.js Metadata API: page titles, descriptions, og:image for every route
 - [x] Create og:image (social share image) with DarSaif branding
 - [x] Add structured data (JSON-LD) for LocalBusiness schema — helps Google understand location/industry
-- [x] Performance audit: fixed missing `images.remotePatterns` for cdn.sanity.io in next.config.mjs (would have broken all images at launch); no static images over 200kb; all Sanity images use CDN transforms + Next.js Image — pending: @vercel/analytics install (awaiting user confirmation)
+- [x] Performance audit: fixed missing `images.remotePatterns` for cdn.sanity.io in next.config.mjs (would have broken all images at launch); no static images over 200kb; all Sanity images use CDN transforms + Next.js Image; @vercel/analytics installed and wired into locale layout
 - [x] Confirm all Framer Motion animations are disabled for `prefers-reduced-motion` users — all 4 components (HeroSection, Header, ProjectsList, FeaturedProjectsList) already implemented useReducedMotion() correctly
-- [ ] Test contact form end-to-end: submit → email received in office inbox
+- [x] Test contact form end-to-end: submit → email received in office inbox
 - [ ] Test WhatsApp button on mobile
-- [ ] 404 page: branded, links back to homepage
+- [x] 404 page: branded, links back to homepage
 - [ ] Connect real domain to Vercel once registered
 - [ ] Replace all placeholder project content with real photos and data from brother
 - [ ] Final review with brother — his sign-off before launch
+
+---
+
+## Discovered — Hero Visual Polish (completed this session)
+- [x] Wire real logo PNG into Header and Footer (mix-blend-mode → transparent PNG)
+- [x] Hero section redesigned: background slideshow of all projects (crossfade, 5s interval), Logo_y full logo (Arabic + Latin) centered, individual backdrop-filter blur(4px) behind logo only
+- [x] Header always solid black (removed backdrop-blur)
 

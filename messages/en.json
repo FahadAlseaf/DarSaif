@@ -81,6 +81,12 @@
     "officeLabel": "Office",
     "address": "Buraydah, Qassim, Saudi Arabia"
   },
+  "notFound": {
+    "heading": "404",
+    "title": "Page Not Found",
+    "body": "The page you're looking for doesn't exist.",
+    "cta": "Back to Homepage"
+  },
   "footer": {
     "location": "Buraydah, Qassim, Saudi Arabia",
     "rights": "All rights reserved."

@@ -26,8 +26,8 @@ export async function sendContactEmail(
     const resend = new Resend(apiKey);
 
     await resend.emails.send({
-      // Update to a verified sender domain in Resend dashboard before launch
-      from: "DarSaif Website <noreply@darsaif.com>",
+      // TODO: switch to verified sender domain (noreply@darsaif.com) before launch
+      from: "DarSaif Website <onboarding@resend.dev>",
       to: toEmail,
       replyTo: data.email,
       subject: `New Inquiry — ${data.name} (${data.projectType})`,
