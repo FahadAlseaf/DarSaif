@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import Image from "next/image";
 
 const NAV_LINKS = [
   ["projects", "/projects"],
@@ -35,13 +36,16 @@ export default function Header() {
   }
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 h-16 border-b border-border bg-bg/90 backdrop-blur-sm">
-      <Link
-        href="/"
-        onClick={close}
-        className="font-heading text-xl tracking-[0.15em] text-text-primary uppercase"
-      >
-        DarSaif
+    <header className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 h-16 border-b border-border bg-bg">
+      <Link href="/" onClick={close} className="flex items-center">
+        <Image
+          src="/images/logo.png"
+          alt="DarSaif"
+          width={110}
+          height={24}
+          className="h-6 w-auto object-contain"
+          priority
+        />
       </Link>
 
       {/* Desktop nav */}

@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import Image from "next/image";
 import LanguageToggle from "./LanguageToggle";
 
 export default function Footer() {
@@ -11,9 +12,13 @@ export default function Footer() {
     <footer className="border-t border-border px-6 md:px-12 py-10">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <p className="font-heading text-lg tracking-[0.15em] text-text-primary uppercase">
-            DarSaif
-          </p>
+          <Image
+            src="/images/logo.png"
+            alt="DarSaif"
+            width={80}
+            height={18}
+            className="h-[18px] w-auto object-contain"
+          />
           <p className="mt-1 text-sm text-text-secondary font-body">
             {tf("location")}
           </p>

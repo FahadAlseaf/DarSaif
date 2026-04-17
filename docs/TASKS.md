@@ -31,7 +31,7 @@ Phase 5 — In Progress. Phases 1–4 complete. Phase 1 Vercel tasks confirmed d
 - [x] Run `npx sanity init` to create Sanity cloud project and get projectId — add to `.env.local`
 - [x] Set up Vercel project, connect GitHub repo, add Sanity environment variables
 - [x] Deploy skeleton to Vercel and confirm routing works in both languages — live at darsaif.vercel.app
-- [ ] Set up `/public/images/` with logo SVG (light version for dark background) and wire into Header
+- [x] Set up `/public/images/` with logo SVG (light version for dark background) and wire into Header
 
 ---
 

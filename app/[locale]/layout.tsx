@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { Cormorant_Garamond, Inter, Noto_Kufi_Arabic } from "next/font/google";
 import { routing } from "@/i18n/routing";
+import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "../globals.css";
@@ -98,6 +99,7 @@ export default async function LocaleLayout({
           <main className="pt-16">{children}</main>
           <Footer />
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );

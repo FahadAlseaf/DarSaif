@@ -23,7 +23,6 @@ export default function FeaturedProjectsList({ projects }: Props) {
   const locale = useLocale();
   const isRTL = locale === "ar";
 
-  // Default to first project image when nothing is hovered
   const activeProject =
     projects.find((p) => p._id === hoveredId) ?? projects[0] ?? null;
 
@@ -58,7 +57,6 @@ export default function FeaturedProjectsList({ projects }: Props) {
                 className="group flex items-baseline gap-6 py-6"
                 onMouseEnter={() => setHoveredId(project._id)}
               >
-                {/* Number */}
                 <span
                   className={`font-body text-xs tracking-[0.2em] tabular-nums shrink-0 transition-colors duration-300 ${
                     isHovered ? "text-accent" : "text-text-secondary"
@@ -67,7 +65,6 @@ export default function FeaturedProjectsList({ projects }: Props) {
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
-                {/* Title + meta */}
                 <div className="flex-1 min-w-0">
                   <p
                     className={`font-heading text-2xl md:text-3xl leading-tight transition-colors duration-300 ${
@@ -78,20 +75,15 @@ export default function FeaturedProjectsList({ projects }: Props) {
                   </p>
                   {(project.type || project.location) && (
                     <p className="font-body text-xs tracking-[0.2em] uppercase text-text-secondary mt-1">
-                      {[project.type, project.location]
-                        .filter(Boolean)
-                        .join(" — ")}
+                      {[project.type, project.location].filter(Boolean).join(" — ")}
                     </p>
                   )}
                 </div>
 
-                {/* Directional arrow */}
                 <span
                   aria-hidden="true"
                   className={`font-body shrink-0 transition-all duration-300 ${
-                    isHovered
-                      ? "text-accent translate-x-1 -translate-x-[var(--tw-translate-x)]"
-                      : "text-text-secondary/40"
+                    isHovered ? "text-accent" : "text-text-secondary/40"
                   }`}
                   style={
                     isHovered
@@ -123,10 +115,7 @@ export default function FeaturedProjectsList({ projects }: Props) {
                 }
               >
                 <Image
-                  src={urlFor(activeProject.coverImage)
-                    .width(800)
-                    .height(1067)
-                    .url()}
+                  src={urlFor(activeProject.coverImage).width(800).height(1067).url()}
                   alt={activeProject.title}
                   fill
                   className="object-cover"

@@ -24,7 +24,10 @@
       "mcp__claude_ai_Vercel__get_project",
       "mcp__claude_ai_Vercel__list_deployments",
       "mcp__claude_ai_Vercel__get_runtime_logs",
-      "Bash(pnpm seed *)"
+      "Bash(pnpm seed *)",
+      "Bash(mkdir -p \"L:/Projects/DarSaif/public/images\")",
+      "Bash(cp \"L:/Projects/DarSaif/LogoF.png\" \"L:/Projects/DarSaif/public/images/logo.png\")",
+      "Bash(powershell *)"
     ]
   }
 }
