@@ -1,22 +1,30 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getFeaturedProjectsSafe } from "@/sanity/lib/queries";
+import {
+  getAllProjectsSafe,
+  getFeaturedProjectsSafe,
+} from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import Reveal from "@/components/ui/Reveal";
 import ProjectRail, { type RailProject } from "@/components/project/ProjectRail";
 
 /**
  * Featured projects as a horizontal rail of tall cards.
- * With no projects in Sanity yet, three illustrated placeholder cards render
- * instead (clearly labeled), so the homepage never looks empty.
+ *
+ * Data priority: projects marked "Featured on Homepage" → otherwise ALL
+ * projects (newest first, max 6) → otherwise three illustrated placeholder
+ * cards (clearly labeled), so the homepage never looks empty.
  */
 export default async function FeaturedProjectsSection() {
-  const [projects, t, tp, locale] = await Promise.all([
+  const [featured, t, tp, locale] = await Promise.all([
     getFeaturedProjectsSafe(),
     getTranslations("home"),
     getTranslations("projects"),
     getLocale(),
   ]);
+
+  const projects =
+    featured.length > 0 ? featured : (await getAllProjectsSafe()).slice(0, 6);
   const isRTL = locale === "ar";
   const arrow = isRTL ? "↖" : "↗";
 

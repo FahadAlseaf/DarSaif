@@ -164,6 +164,15 @@ export async function getFeaturedProjectsSafe(): Promise<SanityProject[]> {
   }
 }
 
+/** Like getAllProjects, but resolves to [] instead of throwing. */
+export async function getAllProjectsSafe(): Promise<SanityProject[]> {
+  try {
+    return (await getAllProjects()) ?? [];
+  } catch {
+    return [];
+  }
+}
+
 /** Like getAllServices, but resolves to [] instead of throwing. */
 export async function getAllServicesSafe(): Promise<SanityService[]> {
   try {
