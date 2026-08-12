@@ -1,20 +1,44 @@
-import { getSiteSettings } from "@/sanity/lib/queries";
+import {
+  getAllProjectsSafe,
+  getFeaturedProjectsSafe,
+  getSiteSettings,
+} from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import HeroSectionClient from "./HeroSectionClient";
 
+/**
+ * V3 "Najdi Interactive" hero.
+ * Arch image priority: Site Settings hero image → first featured project
+ * cover → first project cover → null (illustrated Najdi-door placeholder).
+ */
 export default async function HeroSection() {
-  // Safe fetch: resolves to null when Sanity is empty or unreachable,
-  // in which case the hero renders its illustrated Najdi placeholder.
   const settings = await getSiteSettings();
 
-  let heroImageUrl: string | null = null;
-  if (settings?.heroImage) {
+  let archImageUrl: string | null = null;
+
+  const tryUrl = (source: unknown): string | null => {
     try {
-      heroImageUrl = urlFor(settings.heroImage).width(2000).height(1200).url();
+      return source
+        ? urlFor(source as Parameters<typeof urlFor>[0])
+            .width(1100)
+            .height(1400)
+            .url()
+        : null;
     } catch {
-      heroImageUrl = null;
+      return null;
     }
+  };
+
+  archImageUrl = tryUrl(settings?.heroImage);
+
+  if (!archImageUrl) {
+    const featured = await getFeaturedProjectsSafe();
+    archImageUrl = tryUrl(featured[0]?.coverImage);
+  }
+  if (!archImageUrl) {
+    const all = await getAllProjectsSafe();
+    archImageUrl = tryUrl(all[0]?.coverImage);
   }
 
-  return <HeroSectionClient heroImageUrl={heroImageUrl} />;
+  return <HeroSectionClient archImageUrl={archImageUrl} />;
 }

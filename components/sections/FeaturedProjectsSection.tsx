@@ -6,14 +6,16 @@ import {
 } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import Reveal from "@/components/ui/Reveal";
-import ProjectRail, { type RailProject } from "@/components/project/ProjectRail";
+import ProjectHoverList, {
+  type HoverProject,
+} from "@/components/project/ProjectHoverList";
 
 /**
- * Featured projects as a horizontal rail of tall cards.
+ * V3 projects section — dark chapter, editorial list with the
+ * cursor-following image interaction.
  *
- * Data priority: projects marked "Featured on Homepage" → otherwise ALL
- * projects (newest first, max 6) → otherwise three illustrated placeholder
- * cards (clearly labeled), so the homepage never looks empty.
+ * Data priority: featured projects → all projects (newest, max 6) →
+ * labeled placeholder rows.
  */
 export default async function FeaturedProjectsSection() {
   const [featured, t, tp, locale] = await Promise.all([
@@ -22,75 +24,74 @@ export default async function FeaturedProjectsSection() {
     getTranslations("projects"),
     getLocale(),
   ]);
-
-  const projects =
-    featured.length > 0 ? featured : (await getAllProjectsSafe()).slice(0, 6);
   const isRTL = locale === "ar";
   const arrow = isRTL ? "↖" : "↗";
 
-  const items: RailProject[] = projects.map((p, i) => {
-    let imageUrl: string | null = null;
-    try {
-      imageUrl = p.coverImage
-        ? urlFor(p.coverImage).width(900).height(1000).url()
-        : null;
-    } catch {
-      imageUrl = null;
-    }
-    return {
-      key: p._id,
-      href: `/projects/${p.slug}`,
-      title: isRTL && p.titleAr ? p.titleAr : p.title,
-      meta: [p.type ? tp(p.type) : null, p.location]
-        .filter(Boolean)
-        .join(" · "),
-      tag: p.type ? tp(p.type) : "",
-      imageUrl,
-      placeholderVariant: i,
-      isPlaceholder: false,
-    };
-  });
+  const projects =
+    featured.length > 0 ? featured : (await getAllProjectsSafe()).slice(0, 6);
 
-  const placeholderItems: RailProject[] = [0, 1, 2].map((i) => ({
-    key: `placeholder-${i}`,
-    href: "/projects",
-    title: t("projectPlaceholderTitle"),
-    meta: t("projectPlaceholderMeta"),
-    tag: "—",
-    imageUrl: null,
-    placeholderVariant: i,
-    isPlaceholder: true,
-  }));
-
-  const railItems = items.length > 0 ? items : placeholderItems;
+  const items: HoverProject[] =
+    projects.length > 0
+      ? projects.map((p, i) => {
+          let imageUrl: string | null = null;
+          try {
+            imageUrl = p.coverImage
+              ? urlFor(p.coverImage).width(700).height(800).url()
+              : null;
+          } catch {
+            imageUrl = null;
+          }
+          return {
+            key: p._id,
+            href: `/projects/${p.slug}`,
+            title: isRTL && p.titleAr ? p.titleAr : p.title,
+            meta: [p.type ? tp(p.type) : null, p.location, p.year]
+              .filter(Boolean)
+              .join(" · "),
+            imageUrl,
+            placeholderVariant: i,
+          };
+        })
+      : [0, 1, 2].map((i) => ({
+          key: `placeholder-${i}`,
+          href: "/projects",
+          title: t("projectPlaceholderTitle"),
+          meta: t("projectPlaceholderMeta"),
+          imageUrl: null,
+          placeholderVariant: i,
+        }));
 
   return (
-    <section aria-label={t("featuredProjects")} className="bg-bg">
-      <div className="mx-auto max-w-7xl px-6 pt-24 md:px-12 md:pt-32">
-        <div className="mb-12 flex flex-wrap items-start justify-between gap-10">
+    <section
+      aria-label={t("featuredProjects")}
+      className="bg-night text-night-text"
+    >
+      <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32">
+        <div className="mb-12 flex flex-wrap items-end justify-between gap-8">
           <Reveal>
             <h2 className="font-heading text-4xl font-extrabold leading-snug md:text-6xl">
               {t("featuredPre")}{" "}
-              <span className="font-accent font-normal text-accent">
+              <span className="font-accent font-normal text-accent-soft">
                 {t("featuredAccent")}
               </span>
             </h2>
           </Reveal>
-          <Reveal delay={0.15} className="max-w-sm pt-2">
-            <p className="mb-6 leading-loose text-text-secondary">
-              {t("featuredIntro")}
-            </p>
+          <Reveal delay={0.12}>
             <Link
               href="/projects"
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold text-bg transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-6 py-3 text-sm font-bold text-text-primary transition-transform hover:-translate-y-0.5"
             >
               {t("viewAllProjects")} <span aria-hidden="true">{arrow}</span>
             </Link>
           </Reveal>
         </div>
-      </div>
 
-      <ProjectRail items={railItems} />
+        <ProjectHoverList items={items} />
+
+        <p className="mt-5 hidden text-xs text-night-text-secondary/70 lg:block">
+          {t("projectsHoverHint")} ✨
+        </p>
+      </div>
     </section>
   );
 }

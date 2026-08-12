@@ -22,10 +22,10 @@ export default function HomePage() {
     <>
       <HeroSection />
       <MarqueeStrip />
-      <StatsSection />
-      <NajdiDivider />
       <FeaturedProjectsSection />
+      <NajdiDivider />
       <ServicesTeaserSection />
+      <StatsSection />
       <PhilosophySection />
       <ContactCtaSection />
     </>
