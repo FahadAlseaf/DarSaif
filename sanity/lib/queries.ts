@@ -118,3 +118,57 @@ export async function getAllServices(): Promise<SanityService[]> {
     fetchOptions
   );
 }
+
+// ─── Site settings (singleton) + safe variants ──────────────────────────────
+// The homepage renders complete placeholder content when Sanity has no data
+// (or is unreachable), so these helpers never throw.
+
+export interface SanityStat {
+  value: string;
+  label?: string;
+  labelAr?: string;
+  description?: string;
+  descriptionAr?: string;
+}
+
+export interface SanitySiteSettings {
+  heroImage?: SanityImageSource;
+  stats?: SanityStat[];
+  email?: string;
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  whatsapp?: string;
+}
+
+export async function getSiteSettings(): Promise<SanitySiteSettings | null> {
+  try {
+    return await client.fetch(
+      groq`*[_type == "siteSettings"][0] {
+        heroImage, stats, email, instagram, twitter, linkedin, whatsapp
+      }`,
+      {},
+      fetchOptions
+    );
+  } catch {
+    return null;
+  }
+}
+
+/** Like getFeaturedProjects, but resolves to [] instead of throwing. */
+export async function getFeaturedProjectsSafe(): Promise<SanityProject[]> {
+  try {
+    return (await getFeaturedProjects()) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** Like getAllServices, but resolves to [] instead of throwing. */
+export async function getAllServicesSafe(): Promise<SanityService[]> {
+  try {
+    return (await getAllServices()) ?? [];
+  } catch {
+    return [];
+  }
+}

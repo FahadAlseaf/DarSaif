@@ -1,35 +1,58 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import Reveal from "@/components/ui/Reveal";
+import { ZIGZAG_PATH } from "@/components/najdi/motifs";
 
 export default async function ContactCtaSection() {
-  const t = await getTranslations("home");
+  const [t, locale] = await Promise.all([
+    getTranslations("home"),
+    getLocale(),
+  ]);
+  const arrow = locale === "ar" ? "↖" : "↗";
 
   return (
     <section
       aria-label={t("contactCta")}
-      className="py-32 px-6 border-t border-border text-center"
+      className="relative overflow-hidden bg-night text-center text-night-text"
     >
-      <div className="max-w-2xl mx-auto flex flex-col items-center gap-8">
-        {/* Heading */}
-        <h2 className="font-heading text-[clamp(3rem,8vw,6rem)] leading-[0.9] tracking-[0.04em] text-text-primary uppercase">
-          {t("contactCta")}
-        </h2>
+      <div className="mx-auto max-w-4xl px-6 pb-40 pt-32 md:pb-48 md:pt-40">
+        <Reveal>
+          <h2 className="mb-7 font-heading text-5xl font-extrabold leading-snug md:text-7xl">
+            {t("ctaPre")}{" "}
+            <span className="font-accent font-normal text-accent-soft">
+              {t("ctaAccent")}
+            </span>
+            .
+          </h2>
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mb-11 text-night-text-secondary">
+            {t("contactSubline")}
+          </p>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2.5 rounded-full bg-accent-soft px-9 py-4 text-base font-bold text-text-primary transition-transform hover:-translate-y-0.5"
+          >
+            {t("contactCta")} <span aria-hidden="true">{arrow}</span>
+          </Link>
+        </Reveal>
+      </div>
 
-        {/* Gold rule */}
-        <div aria-hidden="true" className="w-12 h-px bg-accent opacity-60" />
-
-        {/* Subline */}
-        <p className="font-body text-sm tracking-[0.05em] text-text-secondary max-w-xs">
-          {t("contactSubline")}
-        </p>
-
-        {/* CTA button */}
-        <Link
-          href="/contact"
-          className="mt-2 inline-block font-body text-xs tracking-[0.3em] uppercase border border-accent text-accent px-10 py-4 hover:bg-accent hover:text-bg transition-colors duration-300"
-        >
-          {t("contactCta")}
-        </Link>
+      {/* Najdi crenellation line along the bottom edge */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 opacity-25"
+      >
+        <svg viewBox="0 0 1440 90" preserveAspectRatio="none" className="h-full w-full">
+          <path
+            d={ZIGZAG_PATH}
+            fill="none"
+            stroke="var(--color-accent)"
+            strokeWidth="1.5"
+          />
+        </svg>
       </div>
     </section>
   );

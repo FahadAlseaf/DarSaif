@@ -1,6 +1,7 @@
-import { getTranslations, getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getAllServices } from "@/sanity/lib/queries";
+import { getAllServicesSafe } from "@/sanity/lib/queries";
+import Reveal from "@/components/ui/Reveal";
 
 /** Extracts plain text from the first Portable Text block. */
 function firstLineText(blocks: unknown): string {
@@ -12,65 +13,95 @@ function firstLineText(blocks: unknown): string {
     .trim();
 }
 
+/**
+ * Services as numbered editorial rows (/01 … /04) on the dark chapter.
+ * With no services in Sanity yet, four placeholder rows render from the
+ * message files so the section never disappears.
+ */
 export default async function ServicesTeaserSection() {
-  const [services, t, locale] = await Promise.all([
-    getAllServices(),
+  const [services, t, th, locale] = await Promise.all([
+    getAllServicesSafe(),
     getTranslations("services"),
+    getTranslations("home"),
     getLocale(),
   ]);
 
-  // Section is invisible until services are added in Sanity
-  if (services.length === 0) return null;
-
   const isRTL = locale === "ar";
-  const displayed = services.slice(0, 4);
+  const arrow = isRTL ? "↖" : "↗";
+
+  const rows =
+    services.length > 0
+      ? services.slice(0, 4).map((service) => ({
+          key: service._id,
+          title: isRTL && service.titleAr ? service.titleAr : service.title,
+          description: firstLineText(
+            isRTL && service.descriptionAr
+              ? service.descriptionAr
+              : service.description
+          ),
+        }))
+      : ([1, 2, 3, 4] as const).map((i) => ({
+          key: `svc-ph-${i}`,
+          title: th(`svcPh${i}Title`),
+          description: th(`svcPh${i}Desc`),
+        }));
 
   return (
-    <section
-      aria-label={t("title")}
-      className="py-24 px-6 border-t border-border"
-    >
-      <div className="max-w-6xl mx-auto">
-        {/* Section header */}
-        <div className="flex items-baseline justify-between mb-16">
-          <h2 className="font-heading text-sm tracking-[0.3em] uppercase text-text-secondary">
-            {t("title")}
-          </h2>
-          <Link
-            href="/services"
-            className="font-body text-xs tracking-[0.2em] uppercase text-text-secondary hover:text-text-primary transition-colors duration-200"
-          >
-            {t("viewAll")} {isRTL ? "←" : "→"}
-          </Link>
+    <section aria-label={t("title")} className="bg-night text-night-text">
+      <div className="mx-auto max-w-7xl px-6 py-24 md:px-12 md:py-32">
+        <div className="mb-14 flex flex-wrap items-start justify-between gap-10">
+          <Reveal>
+            <h2 className="font-heading text-4xl font-extrabold leading-snug md:text-6xl">
+              {th("servicesPre")}{" "}
+              <span className="font-accent font-normal text-accent-soft">
+                {th("servicesAccent")}
+              </span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.15} className="max-w-sm pt-2">
+            <p className="mb-6 leading-loose text-night-text-secondary">
+              {th("servicesIntro")}
+            </p>
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 text-sm font-bold text-accent-soft transition-colors hover:text-night-text"
+            >
+              {t("viewAll")} <span aria-hidden="true">{arrow}</span>
+            </Link>
+          </Reveal>
         </div>
 
-        {/* Services grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border">
-          {displayed.map((service) => {
-            const title =
-              isRTL && service.titleAr ? service.titleAr : service.title;
-            const description = firstLineText(
-              isRTL && service.descriptionAr
-                ? service.descriptionAr
-                : service.description
-            );
-
-            return (
-              <div
-                key={service._id}
-                className="bg-bg p-8 flex flex-col gap-3"
+        <div>
+          {rows.map((row, i) => (
+            <Reveal key={row.key} delay={i * 0.06}>
+              <Link
+                href="/services"
+                className="group grid grid-cols-[3.5rem_1fr_2rem] items-center gap-5 border-t border-night-border py-9 transition-colors last:border-b hover:bg-night-surface md:grid-cols-[5rem_1fr_1.2fr_3rem] md:gap-8"
               >
-                <h3 className="font-heading text-2xl md:text-3xl text-text-primary leading-tight">
-                  {title}
-                </h3>
-                {description && (
-                  <p className="font-body text-sm text-text-secondary leading-relaxed">
-                    {description}
-                  </p>
+                <span
+                  className="font-accent text-xl text-accent-soft"
+                  dir="ltr"
+                  style={{ unicodeBidi: "isolate" }}
+                >
+                  /{String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="font-heading text-2xl font-extrabold md:text-3xl">
+                  {row.title}
+                </span>
+                {row.description && (
+                  <span className="hidden text-sm leading-loose text-night-text-secondary md:block">
+                    {row.description}
+                  </span>
                 )}
-              </div>
-            );
-          })}
+                <span
+                  aria-hidden="true"
+                  className="text-xl text-accent-soft transition-transform duration-300 group-hover:ltr:translate-x-1 group-hover:ltr:-translate-y-1 group-hover:rtl:-translate-x-1 group-hover:rtl:-translate-y-1"
+                >
+                  {arrow}
+                </span>
+              </Link>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

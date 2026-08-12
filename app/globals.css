@@ -2,23 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-border: #222222;
-  --color-text-primary: #f0f0f0;
-  --color-text-secondary: #888888;
-  --color-accent: #c8a96e;
+/* ─── DarSaif "Najdi Modernism" theme ────────────────────────────────────
+   Light sand base with night-dark chapter sections and a single clay accent.
+   All colors flow through CSS variables so components stay token-based.   */
 
-  --font-heading: "Cormorant Garamond";
+:root {
+  /* Light (base) surfaces */
+  --color-bg: #f5f0e6;
+  --color-surface: #ece4d3;
+  --color-border: #ddd2bc;
+  --color-text-primary: #16130e;
+  --color-text-secondary: #7a7060;
+
+  /* Accent — burnt clay / date amber */
+  --color-accent: #b26f2f;
+  --color-accent-soft: #e5b57f;
+
+  /* Night (dark chapter) surfaces */
+  --color-night: #0f0d0a;
+  --color-night-surface: #181410;
+  --color-night-border: #2c261e;
+  --color-night-text: #f5f0e6;
+  --color-night-text-secondary: #a99c86;
+
+  /* Fonts (populated by next/font in app/[locale]/layout.tsx).
+     English headings intentionally share the body grotesk (Inter). */
+  --font-heading: var(--font-body);
   --font-body: "Inter";
+  --font-accent: "Cormorant Garamond";
   --font-arabic: "Noto Kufi Arabic";
+  --font-arabic-body: "IBM Plex Sans Arabic";
+  --font-arabic-accent: "Amiri";
 }
 
 body {
   color: var(--color-text-primary);
   background: var(--color-bg);
   font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
 }
 
 @layer utilities {
@@ -27,19 +53,72 @@ body {
   }
 }
 
+/* ─── Typography system ──────────────────────────────────────────────────
+   .font-heading — structural headings (Inter / Noto Kufi Arabic)
+   .font-accent  — editorial emphasis words (Cormorant italic / Amiri)     */
+
+.font-heading {
+  font-family: var(--font-heading), sans-serif;
+}
+
+.font-accent {
+  font-family: var(--font-accent), serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
 /* ─── Arabic / RTL typography ─────────────────────────────────────────── */
 
-/* Activate Noto Kufi Arabic for all body text in Arabic locale */
 html[lang="ar"] body {
+  font-family: var(--font-arabic-body), sans-serif;
+}
+
+html[lang="ar"] .font-heading {
   font-family: var(--font-arabic), sans-serif;
 }
 
-/* Cormorant Garamond has no Arabic glyphs — headings also use arabic font */
-html[lang="ar"] .font-heading {
-  font-family: var(--font-arabic), sans-serif;
+/* Arabic has no italics — the accent contrast comes from Amiri's
+   high-contrast naskh forms instead of a slant. */
+html[lang="ar"] .font-accent {
+  font-family: var(--font-arabic-accent), serif;
+  font-style: normal;
 }
 
 /* Arabic script does not use letter-spacing — it breaks letter connections */
 html[lang="ar"] * {
   letter-spacing: 0 !important;
+}
+
+/* ─── Najdi marquee strip ───────────────────────────────────────────────── */
+
+@keyframes darsaif-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: darsaif-marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* ─── Horizontal project rail (scroll-snap) ─────────────────────────────── */
+
+.project-rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.project-rail::-webkit-scrollbar {
+  display: none;
+}
+.project-rail > * {
+  scroll-snap-align: start;
 }

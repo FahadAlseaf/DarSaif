@@ -1,53 +1,62 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import Image from "next/image";
 import LanguageToggle from "./LanguageToggle";
+
+const NAV_LINKS = [
+  ["projects", "/projects"],
+  ["services", "/services"],
+  ["about", "/about"],
+  ["team", "/team"],
+  ["careers", "/careers"],
+  ["contact", "/contact"],
+] as const;
 
 export default function Footer() {
   const t = useTranslations("nav");
   const tf = useTranslations("footer");
+  const locale = useLocale();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border px-6 md:px-12 py-10">
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <footer className="border-t border-night-border bg-night text-night-text">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 py-16 md:grid-cols-[1.4fr_1fr] md:px-12">
+        {/* Brand */}
         <div>
-          <Image
-            src="/images/logo.png"
-            alt="DarSaif"
-            width={80}
-            height={18}
-            className="h-[18px] w-auto object-contain"
-          />
-          <p className="mt-1 text-sm text-text-secondary font-body">
+          <p className="font-heading text-2xl font-extrabold">
+            {locale === "ar" ? "دار سيف" : "DARSAIF"}
+          </p>
+          <p className="mt-1 text-[10px] font-medium tracking-[0.3em] text-night-text-secondary">
+            {locale === "ar" ? "DARSAIF ARCHITECTURE" : "دار سيف للعمارة"}
+          </p>
+          <p className="mt-5 max-w-xs text-sm leading-loose text-night-text-secondary">
+            {tf("blurb")}
+          </p>
+          <p className="mt-4 text-sm text-night-text-secondary">
             {tf("location")}
           </p>
         </div>
 
-        <nav className="flex flex-wrap gap-6">
-          {(
-            [
-              ["projects", "/projects"],
-              ["services", "/services"],
-              ["about", "/about"],
-              ["team", "/team"],
-              ["careers", "/careers"],
-              ["contact", "/contact"],
-            ] as const
-          ).map(([key, href]) => (
-            <Link
-              key={key}
-              href={href}
-              className="text-sm font-body text-text-secondary hover:text-text-primary transition-colors duration-200 tracking-widest uppercase"
-            >
-              {t(key)}
-            </Link>
-          ))}
-        </nav>
+        {/* Navigation */}
+        <div>
+          <p className="mb-5 text-[10px] font-medium tracking-[0.3em] text-night-text-secondary">
+            {tf("navLabel")}
+          </p>
+          <nav className="grid grid-cols-2 gap-x-8 gap-y-3.5">
+            {NAV_LINKS.map(([key, href]) => (
+              <Link
+                key={key}
+                href={href}
+                className="font-heading text-base font-bold text-night-text transition-colors duration-200 hover:text-accent-soft"
+              >
+                {t(key)}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
 
-      <div className="mt-8 flex items-center justify-between">
-        <p className="text-xs text-text-secondary font-body">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t border-night-border px-6 py-6 md:px-12">
+        <p className="text-xs text-night-text-secondary">
           © {year} DarSaif. {tf("rights")}
         </p>
         <LanguageToggle />

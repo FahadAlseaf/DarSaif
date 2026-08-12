@@ -3,30 +3,56 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
-import { Cormorant_Garamond, Inter, Noto_Kufi_Arabic } from "next/font/google";
+import {
+  Amiri,
+  Cormorant_Garamond,
+  IBM_Plex_Sans_Arabic,
+  Inter,
+  Noto_Kufi_Arabic,
+} from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "../globals.css";
 
+// Editorial accent face (English) — italic emphasis words inside headlines
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-heading",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-accent",
   display: "swap",
 });
 
+// Structural face (English) — headings AND body
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
 });
 
+// Structural face (Arabic) — headings and the giant wordmark
 const notoKufi = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-arabic",
+  display: "swap",
+});
+
+// Body face (Arabic)
+const plexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-arabic-body",
+  display: "swap",
+});
+
+// Editorial accent face (Arabic) — the Amiri answer to Cormorant's italics
+const amiri = Amiri({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-arabic-accent",
   display: "swap",
 });
 
@@ -88,7 +114,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body
-        className={`${cormorant.variable} ${inter.variable} ${notoKufi.variable}`}
+        className={`${cormorant.variable} ${inter.variable} ${notoKufi.variable} ${plexArabic.variable} ${amiri.variable}`}
       >
         <script
           type="application/ld+json"
