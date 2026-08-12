@@ -3,9 +3,33 @@
  *
  * Traced from the original artwork, so it stays crisp at any size and
  * inherits the surrounding text colour (works on both the sand and the
- * night palettes). Standalone files live at public/images/logo-mark.{svg,png}.
+ * night palettes). Standalone files live at public/images/logo-mark*.{svg,png}.
  */
-export default function LogoMark({ className }: { className?: string }) {
+
+const PATHS = [
+  // crescent stroke
+  "M0 0C15 7.7 30.2 16.2 45 23C59.8 29.8 73 35.2 89 41C105 46.8 123.8 53 141 58C158.2 63 176.2 67.3 192 71C207.8 74.7 216 76.7 236 80C256 83.3 279.8 87.7 312 91C344.2 94.3 390 97 429 100L387 205C352.3 201.3 315.8 198.5 283 194C250.2 189.5 215.7 183.3 190 178C164.3 172.7 143.2 166.3 129 162C114.8 157.7 113.7 158.8 105 152C96.3 145.2 86.2 132.2 77 121C67.8 109.8 58.8 97.7 50 85C41.2 72.3 32.3 59.2 24 45C15.7 30.8 8 15 0 0Z",
+  // inner tile
+  "M512 103 L698 99 L653 214 L470 212 Z",
+  // outer tile
+  "M798 94 L1019 78 L971 201 L752 214 Z",
+];
+
+/**
+ * Horizontal offsets that reverse the reading order for RTL: each shape moves
+ * to where a mirror would put it (dx = 1020 - x1 - x0 over its own x-extent)
+ * while keeping its own drawing unflipped. The 41px and 54px gaps survive.
+ */
+const RTL_OFFSETS = [591, -148, -751];
+
+export default function LogoMark({
+  className,
+  rtl = false,
+}: {
+  className?: string;
+  /** Lay the shapes out right-to-left, so the tiles lead in Arabic. */
+  rtl?: boolean;
+}) {
   return (
     <svg
       viewBox="0 0 1020 216"
@@ -13,9 +37,13 @@ export default function LogoMark({ className }: { className?: string }) {
       aria-hidden="true"
       className={className}
     >
-      <path d="M0 0C15 7.7 30.2 16.2 45 23C59.8 29.8 73 35.2 89 41C105 46.8 123.8 53 141 58C158.2 63 176.2 67.3 192 71C207.8 74.7 216 76.7 236 80C256 83.3 279.8 87.7 312 91C344.2 94.3 390 97 429 100L387 205C352.3 201.3 315.8 198.5 283 194C250.2 189.5 215.7 183.3 190 178C164.3 172.7 143.2 166.3 129 162C114.8 157.7 113.7 158.8 105 152C96.3 145.2 86.2 132.2 77 121C67.8 109.8 58.8 97.7 50 85C41.2 72.3 32.3 59.2 24 45C15.7 30.8 8 15 0 0Z" />
-      <path d="M512 103 L698 99 L653 214 L470 212 Z" />
-      <path d="M798 94 L1019 78 L971 201 L752 214 Z" />
+      {PATHS.map((d, i) => (
+        <path
+          key={i}
+          d={d}
+          transform={rtl ? `translate(${RTL_OFFSETS[i]} 0)` : undefined}
+        />
+      ))}
     </svg>
   );
 }

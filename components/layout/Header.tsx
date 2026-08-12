@@ -41,7 +41,10 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-border/70 bg-bg/90 px-6 backdrop-blur-md md:px-12">
       {/* Brand lockup — Najdi mark + bilingual wordmark */}
       <Link href="/" onClick={close} className="flex items-center gap-3">
-        <LogoMark className="w-14 shrink-0 text-text-primary rtl:-scale-x-100" />
+        <LogoMark
+          rtl={locale === "ar"}
+          className="w-14 shrink-0 text-text-primary"
+        />
         <span className="flex items-baseline gap-3">
           <span className="font-heading text-xl font-extrabold text-text-primary">
             {locale === "ar" ? "دار سيف" : "DARSAIF"}

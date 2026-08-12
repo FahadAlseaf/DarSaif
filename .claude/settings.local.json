@@ -18,7 +18,8 @@
       "Bash(npm run *)",
       "Bash(git --no-pager log --stat -1)",
       "Bash(python3 -c \"import PIL; print\\('PIL', PIL.__version__\\)\")",
-      "Bash(python3 /private/tmp/claude-501/-Users-fahdalseaf-Desktop-projects-DarSaif/fbd70e64-422a-466b-bc3a-f3a4003a785d/scratchpad/decode.py)"
+      "Bash(python3 /private/tmp/claude-501/-Users-fahdalseaf-Desktop-projects-DarSaif/fbd70e64-422a-466b-bc3a-f3a4003a785d/scratchpad/decode.py)",
+      "Bash(node -e \"console.log\\('tailwind', require\\('./node_modules/tailwindcss/package.json'\\).version\\)\")"
     ]
   }
 }
