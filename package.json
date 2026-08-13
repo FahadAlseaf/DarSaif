@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "seed": "node scripts/seed-projects.mjs"
+    "seed": "node scripts/seed-projects.mjs",
+    "gen:logo-morph": "node scripts/gen-logo-morph.mjs"
   },
   "dependencies": {
     "@sanity/vision": "^3.99.0",

@@ -95,7 +95,9 @@ export default function ProjectFeed({
   }
 
   return (
-    <section className="pt-28 pb-10" id="feed">
+    // pt is deliberately small — the layout already offsets main by the header
+    // height, and stacking pt-28 on top of that left a dead band at the top.
+    <section className="pt-8 pb-10" id="feed">
       {/* filter bar */}
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-wrap items-center gap-x-7 gap-y-2">

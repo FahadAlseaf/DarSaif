@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
-import LogoMark from "@/components/najdi/LogoMark";
+import { useEffect, useState } from "react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from "framer-motion";
+import MorphPath from "@/components/najdi/MorphPath";
+import { MORPH_SHAPES, VIEW_BOX } from "@/components/najdi/logoMorph";
 
-/** Bar offset (px) that closes the three lines into an ✕ when the menu opens. */
-const BAR_SHIFT = 7;
+const EASE = [0.65, 0, 0.35, 1] as const;
 
 interface Props {
   isOpen: boolean;
@@ -15,30 +21,32 @@ interface Props {
 }
 
 /**
- * The site's only nav trigger: the Najdi logo mark that swaps to three
- * hamburger lines on hover (or keyboard focus), then folds into an ✕ while
- * the sidebar is open. Touch devices never hover, so the mark simply stays
- * a mark until tapped — the button opens the sidebar either way.
+ * The site's only nav trigger. The Najdi mark's three shapes morph into the
+ * three burger lines on hover (or keyboard focus), then fold into an ✕ while
+ * the sidebar is open — one continuous shape animation, not a crossfade.
+ * Touch devices never hover, so the mark stays a mark until tapped.
  */
 export default function LogoMenuButton({ isOpen, onClick, label }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  const showBars = isHovered || isOpen;
-  const transition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const };
+  const toBar = useMotionValue(0);
+  const toCross = useMotionValue(0);
+  // The middle line is the one that disappears into the ✕
+  const middleOpacity = useTransform(toCross, [0, 1], [1, 0]);
 
-  /** Closed: three stacked lines. Open: top and bottom cross, middle fades. */
-  const barState = (index: number) => {
-    if (!isOpen) return { rotate: 0, y: 0, opacity: 1 };
-    if (index === 1) return { rotate: 0, y: 0, opacity: 0 };
-    return {
-      rotate: index === 0 ? 45 : -45,
-      y: index === 0 ? BAR_SHIFT : -BAR_SHIFT,
-      opacity: 1,
-    };
-  };
+  const showBars = isHovered || isOpen;
+
+  useEffect(() => {
+    const options = shouldReduceMotion
+      ? { duration: 0 }
+      : { duration: 0.45, ease: EASE };
+    const runs = [
+      animate(toBar, showBars ? 1 : 0, options),
+      animate(toCross, isOpen ? 1 : 0, options),
+    ];
+    return () => runs.forEach((run) => run.stop());
+  }, [showBars, isOpen, shouldReduceMotion, toBar, toCross]);
 
   return (
     <button
@@ -51,34 +59,20 @@ export default function LogoMenuButton({ isOpen, onClick, label }: Props) {
       aria-label={label}
       aria-expanded={isOpen}
       aria-controls="site-sidebar"
-      className="relative flex h-10 w-14 items-center justify-center text-text-primary"
+      className="-m-2 flex w-[4.5rem] items-center justify-center p-2 text-text-primary"
     >
-      {/* Logo mark — fades out as the lines take over */}
-      <motion.span
+      <svg
+        viewBox={VIEW_BOX}
+        fill="currentColor"
         aria-hidden="true"
-        className="absolute inset-0 flex items-center justify-center"
-        animate={{ opacity: showBars ? 0 : 1, scale: showBars ? 0.92 : 1 }}
-        transition={transition}
+        className="w-14 shrink-0 overflow-visible"
       >
-        <LogoMark className="w-14 shrink-0" />
-      </motion.span>
-
-      {/* Hamburger lines */}
-      <motion.span
-        aria-hidden="true"
-        className="absolute inset-0 flex flex-col items-center justify-center gap-[5px]"
-        animate={{ opacity: showBars ? 1 : 0 }}
-        transition={transition}
-      >
-        {[0, 1, 2].map((i) => (
-          <motion.span
-            key={i}
-            className="block h-[2px] w-9 rounded-full bg-current"
-            animate={barState(i)}
-            transition={transition}
-          />
+        {MORPH_SHAPES.map((shape, i) => (
+          <motion.g key={i} style={i === 1 ? { opacity: middleOpacity } : undefined}>
+            <MorphPath shape={shape} toBar={toBar} toCross={toCross} />
+          </motion.g>
         ))}
-      </motion.span>
+      </svg>
     </button>
   );
 }

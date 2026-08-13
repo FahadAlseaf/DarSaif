@@ -24,8 +24,11 @@ export default function Header() {
 
   return (
     <>
-      {/* z-[70] keeps the trigger above the sidebar, so it reads as the ✕ */}
-      <header className="fixed inset-x-0 top-0 z-[70] flex h-16 items-center border-b border-border/70 bg-bg/90 px-6 backdrop-blur-md md:px-12">
+      {/* No bar chrome — a border + fill here just read as an empty band.
+          The gradient is invisible over the page background and only shows
+          itself once darker content scrolls under the mark.
+          z-[70] keeps the trigger above the sidebar, so it reads as the ✕. */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-[70] flex h-16 items-center bg-gradient-to-b from-bg to-transparent px-6 md:px-12 [&>*]:pointer-events-auto">
         <LogoMenuButton
           isOpen={isOpen}
           onClick={() => setIsOpen((v) => !v)}
