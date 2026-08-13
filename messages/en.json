@@ -80,6 +80,39 @@
     "contactCta": "Start a Project",
     "contactSubline": "Tell us about your land and your vision — we'll come back with a first concept."
   },
+  "feed": {
+    "filters": {
+      "all": "All",
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "urban": "Urban",
+      "planning": "Planning",
+      "interior": "Interior"
+    },
+    "searchLabel": "Search projects",
+    "searchHints": "Completed، Buraydah، In design، Residential، Majlis، Unayzah",
+    "count": "{count} projects",
+    "placeholderCount": "Projects are added via Sanity Studio",
+    "noResults": "No matching projects.",
+    "meta": {
+      "client": "CLIENT",
+      "type": "TYPOLOGY",
+      "area": "AREA",
+      "status": "STATUS",
+      "year": "YEAR"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "Under construction",
+      "inDesign": "In design",
+      "concept": "Concept"
+    },
+    "sqm": "{value} m²",
+    "close": "Close",
+    "noDescription": "Description is added via Sanity Studio.",
+    "placeholderTitle": "Upcoming project",
+    "placeholderMeta": "Added via Sanity Studio"
+  },
   "projects": {
     "title": "Projects",
     "all": "All",

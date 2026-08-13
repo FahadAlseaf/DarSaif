@@ -39,9 +39,61 @@ export const projectSchema = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "glyph",
+      title: "Feed Pictogram (Najdi glyph)",
+      description:
+        "The small icon shown next to the project in the homepage feed. If empty, one is picked automatically from the project type.",
+      type: "string",
+      options: {
+        list: [
+          { title: "Najdi Arch — قوس", value: "arch" },
+          { title: "Carved Door — باب", value: "door" },
+          { title: "Zigzag — متعرج", value: "zigzag" },
+          { title: "Crenellation — شرفات", value: "crenellation" },
+          { title: "Dome — قبة", value: "dome" },
+          { title: "Triangles — مثلثات", value: "triangles" },
+        ],
+        layout: "radio",
+      },
+    }),
+    defineField({
       name: "location",
       title: "Location",
       type: "string",
+    }),
+    defineField({
+      name: "locationAr",
+      title: "Location (Arabic)",
+      type: "string",
+    }),
+    defineField({
+      name: "clientName",
+      title: "Client (English)",
+      type: "string",
+    }),
+    defineField({
+      name: "clientNameAr",
+      title: "Client (Arabic)",
+      type: "string",
+    }),
+    defineField({
+      name: "areaSqm",
+      title: "Area (m²)",
+      type: "number",
+      validation: (Rule) => Rule.positive(),
+    }),
+    defineField({
+      name: "status",
+      title: "Status",
+      type: "string",
+      options: {
+        list: [
+          { title: "Completed — مكتمل", value: "completed" },
+          { title: "Under Construction — قيد التنفيذ", value: "inProgress" },
+          { title: "In Design — قيد التصميم", value: "inDesign" },
+          { title: "Concept — تصور مبدئي", value: "concept" },
+        ],
+      },
     }),
     defineField({
       name: "year",

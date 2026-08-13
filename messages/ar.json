@@ -80,6 +80,39 @@
     "contactCta": "ابدأ مشروعك",
     "contactSubline": "أخبرنا عن أرضك ورؤيتك — ونعود إليك بتصوّر أولي."
   },
+  "feed": {
+    "filters": {
+      "all": "الكل",
+      "residential": "سكني",
+      "commercial": "تجاري",
+      "urban": "تطوير عمراني",
+      "planning": "تخطيط",
+      "interior": "تصميم داخلي"
+    },
+    "searchLabel": "بحث في المشاريع",
+    "searchHints": "مكتمل، بريدة، قيد التصميم، سكني، مجلس، عنيزة",
+    "count": "{count} مشاريع",
+    "placeholderCount": "المشاريع تُضاف من لوحة Sanity",
+    "noResults": "لا توجد مشاريع مطابقة.",
+    "meta": {
+      "client": "العميل",
+      "type": "التصنيف",
+      "area": "المساحة",
+      "status": "الحالة",
+      "year": "السنة"
+    },
+    "status": {
+      "completed": "مكتمل",
+      "inProgress": "قيد التنفيذ",
+      "inDesign": "قيد التصميم",
+      "concept": "تصور مبدئي"
+    },
+    "sqm": "{value} م²",
+    "close": "إغلاق",
+    "noDescription": "الوصف يُضاف من لوحة Sanity.",
+    "placeholderTitle": "مشروع قادم",
+    "placeholderMeta": "يُضاف من لوحة Sanity"
+  },
   "projects": {
     "title": "المشاريع",
     "all": "الكل",

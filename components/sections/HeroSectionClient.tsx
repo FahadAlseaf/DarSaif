@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
@@ -8,19 +8,31 @@ import { Link } from "@/i18n/navigation";
 import { NajdiDoor, ZIGZAG_PATH } from "@/components/najdi/motifs";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+const SLIDE_INTERVAL_MS = 2600; // rotate the arch photo every ~2.5s
 
 interface Props {
-  /** Arch image (Sanity). Null → illustrated Najdi-door placeholder. */
-  archImageUrl: string | null;
+  /** Arch images (Sanity), rotated in a crossfade. Empty → Najdi-door placeholder. */
+  archImageUrls: string[];
 }
 
-export default function HeroSectionClient({ archImageUrl }: Props) {
+export default function HeroSectionClient({ archImageUrls }: Props) {
   const t = useTranslations("home");
   const locale = useLocale();
   const arrow = locale === "ar" ? "↖" : "↗";
   const shouldReduceMotion = useReducedMotion();
   const still = shouldReduceMotion;
   const zigRef = useRef<SVGPathElement>(null);
+
+  // Arch slideshow
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    if (still || archImageUrls.length <= 1) return;
+    const id = setInterval(
+      () => setSlide((s) => (s + 1) % archImageUrls.length),
+      SLIDE_INTERVAL_MS
+    );
+    return () => clearInterval(id);
+  }, [still, archImageUrls.length]);
 
   // Draw the zigzag once on mount
   useEffect(() => {
@@ -120,19 +132,47 @@ export default function HeroSectionClient({ archImageUrl }: Props) {
             className="pointer-events-none absolute -inset-3.5 rounded-[300px_300px_30px_30px] border-[1.5px] border-border"
           />
           <div className="relative h-full w-full overflow-hidden rounded-[290px_290px_22px_22px] bg-surface shadow-[0_30px_80px_rgba(22,19,14,.25)]">
-            {archImageUrl ? (
-              <Image
-                src={archImageUrl}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 1024px) 520px, 90vw"
-                className="object-cover"
-              />
+            {archImageUrls.length > 0 ? (
+              archImageUrls.map((url, i) => (
+                <div
+                  key={url}
+                  className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+                  style={{ opacity: i === slide ? 1 : 0 }}
+                >
+                  <Image
+                    src={url}
+                    alt=""
+                    fill
+                    priority={i === 0}
+                    sizes="(min-width: 1024px) 520px, 90vw"
+                    className="object-cover"
+                  />
+                </div>
+              ))
             ) : (
               <NajdiDoor />
             )}
           </div>
+
+          {/* Slide dots */}
+          {archImageUrls.length > 1 && (
+            <div
+              className="absolute -bottom-8 left-1/2 flex -translate-x-1/2 gap-2"
+              role="tablist"
+              aria-label={t("heroWordmark")}
+            >
+              {archImageUrls.map((url, i) => (
+                <button
+                  key={url}
+                  onClick={() => setSlide(i)}
+                  aria-label={`${i + 1}`}
+                  className={`h-[3px] w-7 rounded-full transition-colors ${
+                    i === slide ? "bg-accent" : "bg-border"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Glass chips */}
           <motion.div

@@ -89,27 +89,6 @@ html[lang="ar"] * {
   letter-spacing: 0 !important;
 }
 
-/* ─── Najdi marquee strip ───────────────────────────────────────────────── */
-
-@keyframes darsaif-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee {
-  animation: darsaif-marquee 30s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
-  }
-}
-
 /* ─── Horizontal project rail (scroll-snap) ─────────────────────────────── */
 
 .project-rail {

@@ -1,11 +1,7 @@
 import { getTranslations } from "next-intl/server";
-import HeroSection from "@/components/sections/HeroSection";
-import MarqueeStrip from "@/components/sections/MarqueeStrip";
-import StatsSection from "@/components/sections/StatsSection";
+import { getFeedProjectsSafe } from "@/sanity/lib/queries";
+import ProjectFeed from "@/components/feed/ProjectFeed";
 import NajdiDivider from "@/components/najdi/NajdiDivider";
-import FeaturedProjectsSection from "@/components/sections/FeaturedProjectsSection";
-import ServicesTeaserSection from "@/components/sections/ServicesTeaserSection";
-import PhilosophySection from "@/components/sections/PhilosophySection";
 import ContactCtaSection from "@/components/sections/ContactCtaSection";
 
 export async function generateMetadata() {
@@ -17,16 +13,19 @@ export async function generateMetadata() {
   };
 }
 
-export default function HomePage() {
+/**
+ * «السجل» homepage — the site IS the project feed (big.dk's core idea).
+ * The former hero/marquee/services/stats/philosophy sections were retired
+ * from the homepage on 2026-08-13; their components remain in
+ * components/sections for the inner pages.
+ */
+export default async function HomePage() {
+  const projects = await getFeedProjectsSafe();
+
   return (
     <>
-      <HeroSection />
-      <MarqueeStrip />
-      <FeaturedProjectsSection />
+      <ProjectFeed projects={projects} />
       <NajdiDivider />
-      <ServicesTeaserSection />
-      <StatsSection />
-      <PhilosophySection />
       <ContactCtaSection />
     </>
   );
