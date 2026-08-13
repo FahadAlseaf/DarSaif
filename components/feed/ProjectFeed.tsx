@@ -160,9 +160,13 @@ export default function ProjectFeed({
 /* ─── single entry ─────────────────────────────────────────────────────── */
 
 /**
- * Memoised because the article is a `layout` motion element: without it, any
- * parent re-render makes framer-motion re-measure every entry in the feed.
- * That only holds while fmt/onToggle keep a stable identity upstream.
+ * Memoised so a parent re-render doesn't walk every entry — only holds while
+ * fmt/onToggle keep a stable identity upstream.
+ *
+ * Deliberately NOT a `layout` motion element: the AnimatePresence blocks below
+ * already animate their own height, so the article's box follows on its own.
+ * Adding `layout` on top of that bought nothing and cost a projection node per
+ * entry plus a re-measure on every render.
  */
 const FeedEntry = memo(function FeedEntry({
   project: p,
@@ -198,7 +202,6 @@ const FeedEntry = memo(function FeedEntry({
 
   return (
     <motion.article
-      layout
       transition={spring}
       className="mb-24 scroll-mt-24 grid grid-cols-1 gap-y-4 md:grid-cols-[1fr_minmax(0,3fr)_1fr] md:gap-x-9"
       id={p.slug}
@@ -261,7 +264,6 @@ const FeedEntry = memo(function FeedEntry({
       {/* cover + gallery — center column */}
       <div>
         <motion.button
-          layout
           onClick={handleToggle}
           aria-expanded={open}
           className="group block w-full cursor-pointer overflow-hidden rounded-sm bg-surface"

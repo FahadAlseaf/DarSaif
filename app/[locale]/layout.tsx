@@ -19,8 +19,11 @@ import "../globals.css";
 // Editorial accent face (English) — italic emphasis words inside headlines
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  // .font-accent pins weight 400 + italic, so every other combination this
+  // used to declare (500/600/700, and the whole upright style) shipped a
+  // font file nothing could ever render.
+  weight: ["400"],
+  style: ["italic"],
   variable: "--font-accent",
   display: "swap",
 });
@@ -35,7 +38,10 @@ const inter = Inter({
 // Structural face (Arabic) — headings and the giant wordmark
 const notoKufi = Noto_Kufi_Arabic({
   subsets: ["arabic"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  // No weight list: this pulls the VARIABLE face, one file per unicode range
+  // covering the whole 100-900 axis, instead of a separate set of files per
+  // static weight. font-heading legitimately uses 400-900, so the static
+  // version could not be trimmed any further.
   variable: "--font-arabic",
   display: "swap",
 });
@@ -43,7 +49,8 @@ const notoKufi = Noto_Kufi_Arabic({
 // Body face (Arabic)
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["300", "400", "500", "700"],
+  // 300 dropped — font-light appears nowhere in the codebase.
+  weight: ["400", "500", "700"],
   variable: "--font-arabic-body",
   display: "swap",
 });
@@ -51,7 +58,8 @@ const plexArabic = IBM_Plex_Sans_Arabic({
 // Editorial accent face (Arabic) — the Amiri answer to Cormorant's italics
 const amiri = Amiri({
   subsets: ["arabic", "latin"],
-  weight: ["400", "700"],
+  // Arabic .font-accent pins weight 400, so 700 was unreachable.
+  weight: ["400"],
   variable: "--font-arabic-accent",
   display: "swap",
 });
