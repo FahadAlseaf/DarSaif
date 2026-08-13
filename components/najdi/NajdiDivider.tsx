@@ -29,7 +29,7 @@ export default function NajdiDivider() {
         <motion.path
           d={ZIGZAG_PATH}
           fill="none"
-          stroke="var(--color-accent)"
+          stroke="rgb(var(--color-accent))"
           strokeWidth="2"
           style={shouldReduceMotion ? undefined : { pathLength }}
         />

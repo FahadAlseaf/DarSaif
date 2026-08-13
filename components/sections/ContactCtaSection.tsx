@@ -49,7 +49,7 @@ export default async function ContactCtaSection() {
           <path
             d={ZIGZAG_PATH}
             fill="none"
-            stroke="var(--color-accent)"
+            stroke="rgb(var(--color-accent))"
             strokeWidth="1.5"
           />
         </svg>

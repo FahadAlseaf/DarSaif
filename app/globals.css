@@ -4,26 +4,31 @@
 
 /* ─── DarSaif "Najdi Modernism" theme ────────────────────────────────────
    Light sand base with night-dark chapter sections and a single clay accent.
-   All colors flow through CSS variables so components stay token-based.   */
+   All colors flow through CSS variables so components stay token-based.
+
+   Colours are stored as bare "R G B" channels, not hex, so Tailwind can slot
+   an alpha in: the config maps each to rgb(var(--x) / <alpha-value>), which
+   is what makes bg-bg/75 and friends work. Consuming a token directly in CSS
+   therefore needs the rgb() wrapper — rgb(var(--color-bg)).            */
 
 :root {
   /* Light (base) surfaces */
-  --color-bg: #f5f0e6;
-  --color-surface: #ece4d3;
-  --color-border: #ddd2bc;
-  --color-text-primary: #16130e;
-  --color-text-secondary: #7a7060;
+  --color-bg: 245 240 230; /* #f5f0e6 */
+  --color-surface: 236 228 211; /* #ece4d3 */
+  --color-border: 221 210 188; /* #ddd2bc */
+  --color-text-primary: 22 19 14; /* #16130e */
+  --color-text-secondary: 122 112 96; /* #7a7060 */
 
   /* Accent — burnt clay / date amber */
-  --color-accent: #b26f2f;
-  --color-accent-soft: #e5b57f;
+  --color-accent: 178 111 47; /* #b26f2f */
+  --color-accent-soft: 229 181 127; /* #e5b57f */
 
   /* Night (dark chapter) surfaces */
-  --color-night: #0f0d0a;
-  --color-night-surface: #181410;
-  --color-night-border: #2c261e;
-  --color-night-text: #f5f0e6;
-  --color-night-text-secondary: #a99c86;
+  --color-night: 15 13 10; /* #0f0d0a */
+  --color-night-surface: 24 20 16; /* #181410 */
+  --color-night-border: 44 38 30; /* #2c261e */
+  --color-night-text: 245 240 230; /* #f5f0e6 */
+  --color-night-text-secondary: 169 156 134; /* #a99c86 */
 
   /* Fonts (populated by next/font in app/[locale]/layout.tsx).
      English headings intentionally share the body grotesk (Inter). */
@@ -36,15 +41,15 @@
 }
 
 body {
-  color: var(--color-text-primary);
-  background: var(--color-bg);
+  color: rgb(var(--color-text-primary));
+  background: rgb(var(--color-bg));
   font-family: var(--font-body), sans-serif;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: rgb(var(--color-accent));
+  color: rgb(var(--color-bg));
 }
 
 @layer utilities {

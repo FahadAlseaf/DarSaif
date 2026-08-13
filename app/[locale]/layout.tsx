@@ -122,7 +122,7 @@ export default async function LocaleLayout({
         />
         <NextIntlClientProvider messages={messages}>
           <Header />
-          <main className="pt-16">{children}</main>
+          <main className="pt-14">{children}</main>
           <Footer />
         </NextIntlClientProvider>
         <Analytics />

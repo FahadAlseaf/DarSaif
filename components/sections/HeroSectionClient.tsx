@@ -60,7 +60,7 @@ export default function HeroSectionClient({ archImageUrls }: Props) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-[-0.12em] select-none whitespace-nowrap font-heading text-[clamp(110px,16vw,250px)] font-black leading-none text-transparent ltr:left-[-2vw] rtl:right-[-2vw]"
-        style={{ WebkitTextStroke: "1.5px var(--color-border)" }}
+        style={{ WebkitTextStroke: "1.5px rgb(var(--color-border))" }}
       >
         {t("heroWordmark")}
       </div>
@@ -204,7 +204,7 @@ export default function HeroSectionClient({ archImageUrls }: Props) {
             ref={zigRef}
             d={ZIGZAG_PATH}
             fill="none"
-            stroke="var(--color-accent)"
+            stroke="rgb(var(--color-accent))"
             strokeWidth="1.5"
           />
         </svg>

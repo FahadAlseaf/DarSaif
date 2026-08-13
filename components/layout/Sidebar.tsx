@@ -56,12 +56,9 @@ export default function Sidebar({ isOpen, onClose }: Props) {
           <motion.div
             onClick={onClose}
             aria-hidden="true"
-            // The tint rides on the element's own opacity, not bg-night/40 —
-            // the colour tokens are raw var()s, so Tailwind alpha modifiers
-            // on them compile to nothing.
-            className="fixed inset-0 z-[55] bg-night backdrop-blur-sm"
+            className="fixed inset-0 z-[55] bg-night/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.25 }}
           />

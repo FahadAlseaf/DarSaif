@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { urlFor } from "@/sanity/lib/image";
 import type { SanityProject } from "@/sanity/lib/queries";
 import ProjectGlyphMark, { glyphFor } from "@/components/najdi/ProjectGlyph";
+import FeedSearchField from "./FeedSearchField";
 import { ProjectPlaceholderArt } from "@/components/najdi/motifs";
 
 /**
@@ -48,19 +49,6 @@ export default function ProjectFeed({
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
 
-  // Cycling search placeholder — quietly teaches the query vocabulary.
-  const hints = useMemo(() => t("searchHints").split("،").map((h) => h.trim()),
-    [t]
-  );
-  const [hintIndex, setHintIndex] = useState(0);
-  useEffect(() => {
-    const id = setInterval(
-      () => setHintIndex((i) => (i + 1) % hints.length),
-      2600
-    );
-    return () => clearInterval(id);
-  }, [hints.length]);
-
   const isPlaceholder = projects.length === 0;
 
   const visible = useMemo(() => {
@@ -74,12 +62,22 @@ export default function ProjectFeed({
     });
   }, [projects, filter, query]);
 
-  const fmt = (n: number | string) => (isAr ? arNum(n) : String(n));
+  // fmt and toggle are passed to every entry, so they have to keep a stable
+  // identity or React.memo on FeedEntry can never hold.
+  const fmt = useCallback(
+    (n: number | string) => (isAr ? arNum(n) : String(n)),
+    [isAr]
+  );
 
-  function toggle(id: string, slug: string) {
-    const next = openId === id ? null : id;
-    setOpenId(next);
-    if (typeof window !== "undefined") {
+  // Read through a ref rather than depending on openId, so opening an entry
+  // doesn't hand every other entry a new callback and re-render the feed.
+  const openIdRef = useRef<string | null>(null);
+  openIdRef.current = openId;
+
+  const toggle = useCallback(
+    (id: string, slug: string) => {
+      const next = openIdRef.current === id ? null : id;
+      setOpenId(next);
       window.history.replaceState(null, "", next ? `#${slug}` : " ");
       if (next) {
         // Let the expansion start, then bring the entry into view
@@ -91,13 +89,14 @@ export default function ProjectFeed({
           });
         }, 100);
       }
-    }
-  }
+    },
+    [shouldReduceMotion]
+  );
 
   return (
-    // pt is deliberately small — the layout already offsets main by the header
-    // height, and stacking pt-28 on top of that left a dead band at the top.
-    <section className="pt-8 pb-10" id="feed">
+    // No top padding: main is already offset by the header height, and any
+    // padding here stacks on top of that as dead space.
+    <section className="pb-10" id="feed">
       {/* filter bar */}
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-wrap items-center gap-x-7 gap-y-2">
@@ -117,31 +116,11 @@ export default function ProjectFeed({
               {t(`filters.${f}`)}
             </button>
           ))}
-          <span className="ms-auto flex items-center gap-2 text-text-secondary">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="16.5" y1="16.5" x2="21" y2="21" />
-            </svg>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={hints[hintIndex]}
-              aria-label={t("searchLabel")}
-              className="w-28 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-secondary md:w-36"
-            />
-          </span>
+          <FeedSearchField value={query} onChange={setQuery} />
         </div>
 
         {/* count line */}
-        <div className="mt-8 mb-14 flex items-center gap-4 text-[11px] tracking-widest text-text-secondary">
+        <div className="mt-6 mb-10 flex items-center gap-4 text-[11px] tracking-widest text-text-secondary">
           <span>
             {isPlaceholder
               ? t("placeholderCount")
@@ -163,7 +142,7 @@ export default function ProjectFeed({
               isAr={isAr}
               fmt={fmt}
               open={openId === p._id}
-              onToggle={() => toggle(p._id, p.slug)}
+              onToggle={toggle}
               reduceMotion={!!shouldReduceMotion}
             />
           ))
@@ -180,7 +159,12 @@ export default function ProjectFeed({
 
 /* ─── single entry ─────────────────────────────────────────────────────── */
 
-function FeedEntry({
+/**
+ * Memoised because the article is a `layout` motion element: without it, any
+ * parent re-render makes framer-motion re-measure every entry in the feed.
+ * That only holds while fmt/onToggle keep a stable identity upstream.
+ */
+const FeedEntry = memo(function FeedEntry({
   project: p,
   isAr,
   fmt,
@@ -192,10 +176,11 @@ function FeedEntry({
   isAr: boolean;
   fmt: (n: number | string) => string;
   open: boolean;
-  onToggle: () => void;
+  onToggle: (id: string, slug: string) => void;
   reduceMotion: boolean;
 }) {
   const t = useTranslations("feed");
+  const handleToggle = () => onToggle(p._id, p.slug);
   const title = isAr ? p.titleAr ?? p.title : p.title;
   const location = isAr ? p.locationAr ?? p.location : p.location;
   const clientName = isAr ? p.clientNameAr ?? p.clientName : p.clientName;
@@ -221,7 +206,7 @@ function FeedEntry({
       {/* meta — start side */}
       <div className="flex flex-col gap-2.5 md:items-end md:text-end">
         <button
-          onClick={onToggle}
+          onClick={handleToggle}
           aria-expanded={open}
           className={`flex h-11 w-11 items-center justify-center rounded-sm transition-colors hover:bg-accent ${
             open ? "bg-accent" : "bg-text-primary"
@@ -231,7 +216,7 @@ function FeedEntry({
           <ProjectGlyphMark name={glyphFor(p)} className="h-6 w-6 text-bg" />
         </button>
         <h2
-          onClick={onToggle}
+          onClick={handleToggle}
           className="max-w-[240px] cursor-pointer font-heading text-lg font-semibold leading-relaxed transition-colors hover:text-accent"
         >
           {title}
@@ -277,7 +262,7 @@ function FeedEntry({
       <div>
         <motion.button
           layout
-          onClick={onToggle}
+          onClick={handleToggle}
           aria-expanded={open}
           className="group block w-full cursor-pointer overflow-hidden rounded-sm bg-surface"
           transition={spring}
@@ -361,7 +346,7 @@ function FeedEntry({
             className="overflow-hidden text-center md:col-start-2"
           >
             <button
-              onClick={onToggle}
+              onClick={handleToggle}
               className="mt-1 rounded-full border border-border px-6 py-1.5 text-xs text-text-secondary transition-colors hover:border-accent hover:text-accent"
             >
               {t("close")}
@@ -371,7 +356,7 @@ function FeedEntry({
       </AnimatePresence>
     </motion.article>
   );
-}
+});
 
 function MetaField({ label, value }: { label: string; value: string }) {
   return (

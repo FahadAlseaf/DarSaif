@@ -28,7 +28,7 @@ export default function Header() {
           The gradient is invisible over the page background and only shows
           itself once darker content scrolls under the mark.
           z-[70] keeps the trigger above the sidebar, so it reads as the ✕. */}
-      <header className="pointer-events-none fixed inset-x-0 top-0 z-[70] flex h-16 items-center bg-gradient-to-b from-bg to-transparent px-6 md:px-12 [&>*]:pointer-events-auto">
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-[70] flex h-14 items-center bg-gradient-to-b from-bg to-transparent px-6 md:px-12 [&>*]:pointer-events-auto">
         <LogoMenuButton
           isOpen={isOpen}
           onClick={() => setIsOpen((v) => !v)}
